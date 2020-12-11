@@ -1,5 +1,5 @@
 ![CI](https://github.com/ps2dev/ps2toolchain-iop/workflows/CI/badge.svg)
-![CI-Docker](https://github.com/ps2dev/ps2toolchain-ioop/workflows/CI-Docker/badge.svg)
+![CI-Docker](https://github.com/ps2dev/ps2toolchain-iop/workflows/CI-Docker/badge.svg)
 
 # ps2toolchain-iop
 
