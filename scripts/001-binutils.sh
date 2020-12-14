@@ -32,7 +32,7 @@ echo "Building with $PROC_NR jobs"
 ## For each target...
 for TARGET in "iop"; do
 	## Create and enter the build directory.
-	mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
+	rm -rf build-$TARGET && mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
 
 	## Configure the build.
 	if [ ${OSVER:0:6} == Darwin ]; then

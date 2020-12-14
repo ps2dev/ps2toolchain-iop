@@ -20,13 +20,13 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get -y install texinfo bison flex
+        sudo apt-get -y install texinfo bison flex gettext
     
     - name: Install Mac texinfo bison flex
       if: matrix.os == 'macOS-latest'
       run: |
         brew update
-        brew install texinfo bison flex
+        brew install texinfo bison flex gettext
 
     - name: Switch to Xcode 11.7
       if: matrix.os == 'macOS-latest'
