@@ -38,3 +38,11 @@ jobs:
         export PS2DEV=$PWD/ps2dev
         export PATH=$PATH:$PS2DEV/iop/bin
         ./toolchain.sh
+    
+    - name: Print bins version
+      run: |
+        export PS2DEV=$PWD/ps2dev
+        export PATH=$PATH:$PS2DEV/iop/bin
+        iop-as --version
+        iop-ld --version
+        iop-gcc --version
