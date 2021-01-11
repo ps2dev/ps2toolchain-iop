@@ -6,7 +6,7 @@ ENV PATH $PATH:${PS2DEV}/iop/bin
 
 COPY . /src
 
-RUN apk add build-base git bash patch wget texinfo
+RUN apk add build-base git bash patch wget texinfo gettext
 RUN cd /src && ./toolchain.sh
 
 # Second stage of Dockerfile

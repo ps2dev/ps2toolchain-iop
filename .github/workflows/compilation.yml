@@ -20,13 +20,13 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get -y install texinfo bison flex
+        sudo apt-get -y install texinfo bison flex gettext
     
     - name: Install Mac texinfo bison flex
       if: matrix.os == 'macOS-latest'
       run: |
         brew update
-        brew install texinfo bison flex
+        brew install texinfo bison flex gettext
 
     - name: Switch to Xcode 11.7
       if: matrix.os == 'macOS-latest'
@@ -38,3 +38,11 @@ jobs:
         export PS2DEV=$PWD/ps2dev
         export PATH=$PATH:$PS2DEV/iop/bin
         ./toolchain.sh
+    
+    - name: Print bins version
+      run: |
+        export PS2DEV=$PWD/ps2dev
+        export PATH=$PATH:$PS2DEV/iop/bin
+        iop-as --version
+        iop-ld --version
+        iop-gcc --version

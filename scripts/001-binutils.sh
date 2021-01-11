@@ -1,19 +1,14 @@
 #!/bin/bash
-# binutils-2.14.sh by Naomi Peori (naomi@peori.ca)
+# binutils-2.14.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
 
-BINUTILS_VERSION=2.14
 ## Download the source code.
-SOURCE=http://ftpmirror.gnu.org/binutils/binutils-$BINUTILS_VERSION.tar.bz2
-wget --continue $SOURCE || { exit 1; }
-
-## Unpack the source code.
-echo Decompressing Binutils $BINUTILS_VERSION. Please wait.
-rm -Rf binutils-$BINUTILS_VERSION && tar xfj binutils-$BINUTILS_VERSION.tar.bz2 || { exit 1; }
-
-## Enter the source directory and patch the source code.
-cd binutils-$BINUTILS_VERSION || { exit 1; }
-if [ -e ../../patches/binutils-$BINUTILS_VERSION-PS2.patch ]; then
-	cat ../../patches/binutils-$BINUTILS_VERSION-PS2.patch | patch -p1 || { exit 1; }
+REPO_URL="https://github.com/ps2dev/binutils-gdb.git"
+REPO_FOLDER="binutils-gdb"
+BRANCH_NAME="iop-v2.14"
+if test ! -d "$REPO_FOLDER"; then
+	git clone --depth 1 -b $BRANCH_NAME $REPO_URL && cd $REPO_FOLDER || exit 1
+else
+	cd $REPO_FOLDER && git fetch origin && git reset --hard origin/${BRANCH_NAME} || exit 1
 fi
 
 OSVER=$(uname)
@@ -37,7 +32,7 @@ echo "Building with $PROC_NR jobs"
 ## For each target...
 for TARGET in "iop"; do
 	## Create and enter the build directory.
-	mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
+	rm -rf build-$TARGET && mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
 
 	## Configure the build.
 	if [ ${OSVER:0:6} == Darwin ]; then
