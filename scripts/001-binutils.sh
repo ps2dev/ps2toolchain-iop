@@ -35,14 +35,13 @@ for TARGET in "iop"; do
 	rm -rf build-$TARGET && mkdir build-$TARGET && cd build-$TARGET || { exit 1; }
 
 	## Configure the build.
-	if [ ${OSVER:0:6} == Darwin ]; then
-		CC=/usr/bin/gcc CXX=/usr/bin/g++ LD=/usr/bin/ld CFLAGS="-O0 -ansi -Wno-implicit-int -Wno-return-type" ../configure --quiet --disable-build-warnings --prefix="$PS2DEV/$TARGET" --target="$TARGET" $TARG_XTRA_OPTS || { exit 1; }
-	else
-		../configure --quiet --disable-build-warnings --prefix="$PS2DEV/$TARGET" --target="$TARGET" $TARG_XTRA_OPTS || { exit 1; }
-	fi
-
+	../configure --quiet --disable-build-warnings --prefix="$PS2DEV/$TARGET" --target="$TARGET" $TARG_XTRA_OPTS || { exit 1; }
+	
 	## Compile and install.
-	make --quiet clean && make --quiet -j $PROC_NR CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=0 -O2" LDFLAGS="$LDFLAGS -s" && make --quiet install && make --quiet clean || { exit 1; }
+	make --quiet clean -j $PROC_NR || { exit 1; }
+	make -j $PROC_NR CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=0 -O2 -Wno-implicit-function-declaration" LDFLAGS="$LDFLAGS -s" || { exit 1; }
+	make --quiet install -j $PROC_NR || { exit 1; }
+	make --quiet clean -j $PROC_NR || { exit 1; }
 
 	## Exit the build directory.
 	cd .. || { exit 1; }
