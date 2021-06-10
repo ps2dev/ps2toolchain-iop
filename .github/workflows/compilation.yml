@@ -23,26 +23,27 @@ jobs:
       if: matrix.os[0] == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get -y install texinfo bison flex gettext
+        sudo apt-get -y install texinfo bison flex libgmp3-dev libmpfr-dev libmpc-dev
     
     - name: Install Mac texinfo bison flex
       if: matrix.os[0] == 'macOS-latest'
       run: |
         brew update
-        brew install texinfo bison flex gettext
+        brew install texinfo bison flex gnu-sed gsl gmp mpfr
 
     - name: Install MSYS2 texinfo bison flex
       if: matrix.os[0] == 'windows-latest'
       uses: msys2/setup-msys2@v2
       with:
         msystem: MINGW32
-        install: base-devel git make texinfo flex bison patch binutils mingw-w64-i686-gcc
+        install: base-devel git make texinfo flex bison patch binutils mingw-w64-i686-gcc mpc-devel
         update: true
         shell: msys2 {0}
 
     - name: Runs all the stages in the shell
       run: |
         export PS2DEV=$PWD/ps2dev
+        export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
         export PATH=$PATH:$PS2DEV/iop/bin
         ./toolchain.sh
     
@@ -50,6 +51,6 @@ jobs:
       run: |
         export PS2DEV=$PWD/ps2dev
         export PATH=$PATH:$PS2DEV/iop/bin
-        iop-as --version
-        iop-ld --version
-        iop-gcc --version
+        mipsel-ps2-irx-as --version
+        mipsel-ps2-irx-ld --version
+        mipsel-ps2-irx-gcc --version
