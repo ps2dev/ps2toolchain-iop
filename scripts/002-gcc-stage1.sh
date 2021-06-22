@@ -1,23 +1,18 @@
 #!/bin/bash
-# gcc-3.2.3-stage1.sh by AKuHAK
-# Based on gcc-3.2.2-stage1.sh by Naomi Peori (naomi@peori.ca)
+# 002-gcc-stage1.sh by Francisco Javier Trujillo Mata (fjtrujy@gmail.com)
 
-GCC_VERSION=3.2.3
 ## Download the source code.
-SOURCE=http://ftpmirror.gnu.org/gcc/gcc-$GCC_VERSION/gcc-$GCC_VERSION.tar.bz2
-wget --continue $SOURCE || { exit 1; }
-
-## Unpack the source code.
-echo Decompressing GCC $GCC_VERSION. Please wait.
-rm -Rf gcc-$GCC_VERSION && tar xfj gcc-$GCC_VERSION.tar.bz2 || { exit 1; }
-
-## Enter the source directory and patch the source code.
-cd gcc-$GCC_VERSION || { exit 1; }
-if [ -e ../../patches/gcc-$GCC_VERSION-PS2.patch ]; then
-	cat ../../patches/gcc-$GCC_VERSION-PS2.patch | patch -p1 || { exit 1; }
+REPO_URL="https://github.com/ps2dev/gcc.git"
+REPO_FOLDER="gcc"
+BRANCH_NAME="iop-v11.1.0"
+if test ! -d "$REPO_FOLDER"; then
+	git clone --depth 1 -b $BRANCH_NAME $REPO_URL && cd $REPO_FOLDER || exit 1
+else
+	cd $REPO_FOLDER && git fetch origin && git reset --hard origin/${BRANCH_NAME} && git checkout ${BRANCH_NAME} || exit 1
 fi
 
-TARGET="iop"
+TARGET_ALIAS="iop" 
+TARGET="mipsel-ps2-irx"
 TARG_XTRA_OPTS=""
 OSVER=$(uname)
 
@@ -27,38 +22,49 @@ if [ ${OSVER:0:6} == Darwin ]; then
 elif [ ${OSVER:0:10} == MINGW64_NT ]; then
 	export lt_cv_sys_max_cmd_len=8000
 	export CC=x86_64-w64-mingw32-gcc
-	CFLAGS="$CFLAGS -DHAVE_DECL_ASPRINTF -DHAVE_DECL_VASPRINTF"
 	TARG_XTRA_OPTS="--host=x86_64-w64-mingw32"
 elif [ ${OSVER:0:10} == MINGW32_NT ]; then
 	export lt_cv_sys_max_cmd_len=8000
 	export CC=i686-w64-mingw32-gcc
-	CFLAGS="$CFLAGS -DHAVE_DECL_ASPRINTF -DHAVE_DECL_VASPRINTF"
 	TARG_XTRA_OPTS="--host=i686-w64-mingw32"
 fi
 
 ## Determine the maximum number of processes that Make can work with.
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
-echo "Building with $PROC_NR jobs"
-
-## Create and enter the build directory.
+## Create and enter the toolchain/build directory
 rm -rf build-$TARGET-stage1 && mkdir build-$TARGET-stage1 && cd build-$TARGET-stage1 || { exit 1; }
 
 ## Configure the build.
 ../configure \
   --quiet \
-  --prefix="$PS2DEV/$TARGET" \
+  --prefix="$PS2DEV/$TARGET_ALIAS" \
   --target="$TARGET" \
   --enable-languages="c" \
-  --with-newlib \
-  --without-headers \
- $TARG_XTRA_OPTS || { exit 1; }
+  --with-float=soft \
+  --with-headers=no \
+  --without-newlib \
+  --without-cloog \
+  --without-ppl \
+  --disable-decimal-float \
+  --disable-libada \
+  --disable-libatomic \
+  --disable-libffi \
+  --disable-libgomp \
+  --disable-libmudflap \
+  --disable-libquadmath \
+  --disable-libssp \
+  --disable-libstdcxx-pch \
+  --disable-multilib \
+  --disable-nls \
+  --disable-shared \
+  --disable-threads \
+  --disable-target-libiberty \
+  --disable-target-zlib \
+  $TARG_XTRA_OPTS || { exit 1; }
 
 ## Compile and install.
-make --quiet -j $PROC_NR clean   || { exit 1; }
-make --quiet -j $PROC_NR CFLAGS="$CFLAGS -D_FORTIFY_SOURCE=0 -O2 -Wno-implicit-function-declaration" LDFLAGS="$LDFLAGS -s" || { exit 1; }
-make --quiet -j $PROC_NR install || { exit 1; }
-make --quiet -j $PROC_NR clean   || { exit 1; }
-
-## Exit the build directory.
-cd .. || { exit 1; }
+make --quiet -j $PROC_NR clean          || { exit 1; }
+make --quiet -j $PROC_NR all            || { exit 1; }
+make --quiet -j $PROC_NR install-strip  || { exit 1; }
+make --quiet -j $PROC_NR clean          || { exit 1; }
