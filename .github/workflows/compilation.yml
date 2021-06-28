@@ -18,13 +18,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Install Ubuntu texinfo bison flex
       if: matrix.os[0] == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt-get -y install texinfo bison flex libgmp3-dev libmpfr-dev libmpc-dev
-    
+
     - name: Install Mac texinfo bison flex
       if: matrix.os[0] == 'macOS-latest'
       run: |
@@ -46,7 +46,7 @@ jobs:
         export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
         export PATH=$PATH:$PS2DEV/iop/bin
         ./toolchain.sh
-    
+
     - name: Print bins version
       run: |
         export PS2DEV=$PWD/ps2dev
