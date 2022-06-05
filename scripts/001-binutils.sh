@@ -23,7 +23,6 @@ else
 fi
 
 TARGET_ALIAS="iop"
-TARGET="mipsel-ps2-irx"
 TARG_XTRA_OPTS=""
 OSVER=$(uname)
 
@@ -40,22 +39,27 @@ fi
 ## Determine the maximum number of processes that Make can work with.
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
-## Create and enter the toolchain/build directory
-rm -rf "build-$TARGET"
-mkdir "build-$TARGET"
-cd "build-$TARGET"
+## For each target...
+for TARGET in "mipsel-ps2-irx"; do
+  ## Create and enter the toolchain/build directory
+  rm -rf "build-$TARGET"
+  mkdir "build-$TARGET"
+  cd "build-$TARGET"
 
-## Configure the build.
-../configure \
-  --quiet \
-  --prefix="$PS2DEV/$TARGET_ALIAS" \
-  --target="$TARGET" \
-  --disable-separate-code \
-  --disable-sim \
-  --disable-nls \
-  $TARG_XTRA_OPTS
+  ## Configure the build.
+  ../configure \
+    --quiet \
+    --prefix="$PS2DEV/$TARGET_ALIAS" \
+    --target="$TARGET" \
+    --disable-separate-code \
+    --disable-sim \
+    --disable-nls \
+    $TARG_XTRA_OPTS
 
-## Compile and install.
-make --quiet -j "$PROC_NR"
-make --quiet -j "$PROC_NR" install-strip
-make --quiet -j "$PROC_NR" clean
+  ## Compile and install.
+  make --quiet -j "$PROC_NR"
+  make --quiet -j "$PROC_NR" install-strip
+  make --quiet -j "$PROC_NR" clean
+
+  ## End target.
+done
