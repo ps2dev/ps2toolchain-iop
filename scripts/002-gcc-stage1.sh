@@ -39,7 +39,7 @@ fi
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## For each target...
-for TARGET in "mipsel-ps2-irx"; do
+for TARGET in "mipsel-ps2-irx" "mipsel-ps2-elf"; do
   ## Create and enter the toolchain/build directory
   rm -rf "build-$TARGET-stage1"
   mkdir "build-$TARGET-stage1"
