@@ -60,5 +60,8 @@ for TARGET in "mipsel-ps2-irx" "mipsel-ps2-elf"; do
   make --quiet -j "$PROC_NR" install-strip
   make --quiet -j "$PROC_NR" clean
 
+  ## Exit the build directory.
+  cd ..
+
   ## End target.
 done
