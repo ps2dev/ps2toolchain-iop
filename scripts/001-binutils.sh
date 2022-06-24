@@ -39,7 +39,7 @@ fi
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## For each target...
-for TARGET in "mipsel-ps2-irx"; do
+for TARGET in "mipsel-ps2-irx" "mipsel-ps2-elf"; do
   ## Create and enter the toolchain/build directory
   rm -rf "build-$TARGET"
   mkdir "build-$TARGET"
@@ -59,6 +59,9 @@ for TARGET in "mipsel-ps2-irx"; do
   make --quiet -j "$PROC_NR"
   make --quiet -j "$PROC_NR" install-strip
   make --quiet -j "$PROC_NR" clean
+
+  ## Exit the build directory.
+  cd ..
 
   ## End target.
 done
