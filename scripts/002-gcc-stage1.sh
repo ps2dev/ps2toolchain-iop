@@ -71,6 +71,7 @@ for TARGET in "mipsel-ps2-irx" "mipsel-ps2-elf"; do
     --disable-target-libiberty \
     --disable-target-zlib \
     --disable-nls \
+    --disable-tls \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
