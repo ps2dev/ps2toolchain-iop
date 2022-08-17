@@ -44,6 +44,7 @@ jobs:
       run: |
         export PS2DEV=$PWD/ps2dev
         export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+        export PATH="/usr/local/opt/bison/bin:$PATH"
         export PATH=$PATH:$PS2DEV/iop/bin
         ./toolchain.sh
 
@@ -51,6 +52,6 @@ jobs:
       run: |
         export PS2DEV=$PWD/ps2dev
         export PATH=$PATH:$PS2DEV/iop/bin
-        mipsel-ps2-irx-as --version
-        mipsel-ps2-irx-ld --version
-        mipsel-ps2-irx-gcc --version
+        mipsel-ps2-elf-as --version
+        mipsel-ps2-elf-ld --version
+        mipsel-ps2-elf-gcc --version
