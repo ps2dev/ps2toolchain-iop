@@ -9,9 +9,9 @@ onerr()
 trap onerr ERR
 
 ## Download the source code.
-REPO_URL="https://github.com/ps2dev/binutils-gdb.git"
+REPO_URL="https://github.com/bminor/binutils-gdb.git"
 REPO_FOLDER="binutils-gdb"
-BRANCH_NAME="iop-v2.35.2"
+BRANCH_NAME="binutils-2_39"
 if test ! -d "$REPO_FOLDER"; then
   git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL"
 else
@@ -39,7 +39,7 @@ fi
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## For each target...
-for TARGET in "mipsel-ps2-irx" "mipsel-ps2-elf"; do
+for TARGET in "mipsel-ps2-elf"; do
   ## Create and enter the toolchain/build directory
   rm -rf "build-$TARGET"
   mkdir "build-$TARGET"
