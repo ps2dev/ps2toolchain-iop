@@ -9,9 +9,9 @@ onerr()
 trap onerr ERR
 
 ## Download the source code.
-REPO_URL="https://github.com/gcc-mirror/gcc.git"
+REPO_URL="https://github.com/ps2dev/gcc.git"
 REPO_FOLDER="gcc"
-BRANCH_NAME="releases/gcc-12.2.0"
+BRANCH_NAME="iop-v11.3.0"
 if test ! -d "$REPO_FOLDER"; then
   git clone --depth 1 -b "$BRANCH_NAME" "$REPO_URL"
 else
@@ -39,7 +39,7 @@ fi
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
 ## For each target...
-for TARGET in "mipsel-ps2-elf"; do
+for TARGET in "mipsel-ps2-irx" "mipsel-ps2-elf"; do
   ## Create and enter the toolchain/build directory
   rm -rf "build-$TARGET-stage1"
   mkdir "build-$TARGET-stage1"
