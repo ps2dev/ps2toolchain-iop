@@ -64,7 +64,7 @@ for TARGET in "mipsel-ps2-irx" "mipsel-ps2-elf"; do
     --quiet \
     --prefix="$PS2DEV/$TARGET_ALIAS" \
     --target="$TARGET" \
-    --enable-languages="c" \
+    --enable-languages="c,c++" \
     --with-float=soft \
     --with-headers=no \
     --without-newlib \
@@ -86,6 +86,7 @@ for TARGET in "mipsel-ps2-irx" "mipsel-ps2-elf"; do
     --disable-target-zlib \
     --disable-nls \
     --disable-tls \
+    --disable-libstdcxx \
     MAKEINFO=missing \
     $TARG_XTRA_OPTS
 
