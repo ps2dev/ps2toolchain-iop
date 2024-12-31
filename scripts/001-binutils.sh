@@ -68,6 +68,7 @@ for TARGET in "mipsel-ps2-irx" "mipsel-none-elf"; do
     --disable-separate-code \
     --disable-sim \
     --disable-nls \
+    --with-python=no \
     $TARG_XTRA_OPTS
 
   ## Compile and install.
