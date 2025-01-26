@@ -32,6 +32,7 @@ fi
 
 cd "$REPO_FOLDER"
 
+TARGET="mipsel-none-elf"
 TARGET_ALIAS="iop"
 TARG_XTRA_OPTS=""
 TARGET_CFLAGS="-O2 -gdwarf-2 -gz"
@@ -54,52 +55,47 @@ fi
 ## Determine the maximum number of processes that Make can work with.
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
-## For each target...
-for TARGET in "mipsel-ps2-irx" "mipsel-none-elf"; do
-  ## Create and enter the toolchain/build directory
-  rm -rf "build-$TARGET-stage1"
-  mkdir "build-$TARGET-stage1"
-  cd "build-$TARGET-stage1"
+## Create and enter the toolchain/build directory
+rm -rf "build-$TARGET-stage1"
+mkdir "build-$TARGET-stage1"
+cd "build-$TARGET-stage1"
 
-  ## Configure the build.
-  CFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
-  CXXFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
-  ../configure \
-    --quiet \
-    --prefix="$PS2DEV/$TARGET_ALIAS" \
-    --target="$TARGET" \
-    --enable-languages="c,c++" \
-    --with-float=soft \
-    --with-headers=no \
-    --without-newlib \
-    --without-cloog \
-    --without-ppl \
-    --disable-decimal-float \
-    --disable-libada \
-    --disable-libatomic \
-    --disable-libffi \
-    --disable-libgomp \
-    --disable-libmudflap \
-    --disable-libquadmath \
-    --disable-libssp \
-    --disable-libstdcxx-pch \
-    --disable-multilib \
-    --disable-shared \
-    --disable-threads \
-    --disable-target-libiberty \
-    --disable-target-zlib \
-    --disable-nls \
-    --disable-tls \
-    --disable-libstdcxx \
-    $TARG_XTRA_OPTS
+## Configure the build.
+CFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
+CXXFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
+../configure \
+  --quiet \
+  --prefix="$PS2DEV/$TARGET_ALIAS" \
+  --target="$TARGET" \
+  --enable-languages="c,c++" \
+  --with-float=soft \
+  --with-headers=no \
+  --without-newlib \
+  --without-cloog \
+  --without-ppl \
+  --disable-decimal-float \
+  --disable-libada \
+  --disable-libatomic \
+  --disable-libffi \
+  --disable-libgomp \
+  --disable-libmudflap \
+  --disable-libquadmath \
+  --disable-libssp \
+  --disable-libstdcxx-pch \
+  --disable-multilib \
+  --disable-shared \
+  --disable-threads \
+  --disable-target-libiberty \
+  --disable-target-zlib \
+  --disable-nls \
+  --disable-tls \
+  --disable-libstdcxx \
+  $TARG_XTRA_OPTS
 
-  ## Compile and install.
-  make --quiet -j "$PROC_NR" all
-  make --quiet -j "$PROC_NR" install-strip
-  make --quiet -j "$PROC_NR" clean
+## Compile and install.
+make --quiet -j "$PROC_NR" all
+make --quiet -j "$PROC_NR" install-strip
+make --quiet -j "$PROC_NR" clean
 
-  ## Exit the build directory.
-  cd ..
-
-  ## End target.
-done
+## Exit the build directory.
+cd ..
