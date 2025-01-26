@@ -32,6 +32,7 @@ fi
 
 cd "$REPO_FOLDER"
 
+TARGET="mipsel-none-elf"
 TARGET_ALIAS="iop"
 TARG_XTRA_OPTS=""
 OSVER=$(uname)
@@ -53,31 +54,26 @@ fi
 ## Determine the maximum number of processes that Make can work with.
 PROC_NR=$(getconf _NPROCESSORS_ONLN)
 
-## For each target...
-for TARGET in "mipsel-ps2-irx" "mipsel-none-elf"; do
-  ## Create and enter the toolchain/build directory
-  rm -rf "build-$TARGET"
-  mkdir "build-$TARGET"
-  cd "build-$TARGET"
+## Create and enter the toolchain/build directory
+rm -rf "build-$TARGET"
+mkdir "build-$TARGET"
+cd "build-$TARGET"
 
-  ## Configure the build.
-  ../configure \
-    --quiet \
-    --prefix="$PS2DEV/$TARGET_ALIAS" \
-    --target="$TARGET" \
-    --disable-separate-code \
-    --disable-sim \
-    --disable-nls \
-    --with-python=no \
-    $TARG_XTRA_OPTS
+## Configure the build.
+../configure \
+  --quiet \
+  --prefix="$PS2DEV/$TARGET_ALIAS" \
+  --target="$TARGET" \
+  --disable-separate-code \
+  --disable-sim \
+  --disable-nls \
+  --with-python=no \
+  $TARG_XTRA_OPTS
 
-  ## Compile and install.
-  make --quiet -j "$PROC_NR"
-  make --quiet -j "$PROC_NR" install-strip
-  make --quiet -j "$PROC_NR" clean
+## Compile and install.
+make --quiet -j "$PROC_NR"
+make --quiet -j "$PROC_NR" install-strip
+make --quiet -j "$PROC_NR" clean
 
-  ## Exit the build directory.
-  cd ..
-
-  ## End target.
-done
+## Exit the build directory.
+cd ..
