@@ -9,44 +9,74 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os[0] }}
+    runs-on: ${{ matrix.target.machine }}
     strategy:
       matrix:
-        os: [
-          [macos-latest, arm64, bash],
-          [macos-13, x86_64, bash],
-          [ubuntu-latest, x86_64, bash],
-          [windows-latest, x86_64, msys2]
-        ]
+        target:
+          - machine: macos-latest
+            architecture: arm64
+            shell: bash
+            packageManager: brew
+          - machine: macos-13
+            architecture: x86_64
+            shell: bash
+            packageManager: brew
+          - machine: macos-latest
+            architecture: arm64
+            shell: bash
+            packageManager: macport
+          - machine: ubuntu-latest
+            architecture: x86_64
+            shell: bash
+            packageManager: default
+          - machine: ubuntu-22.04-arm
+            architecture: arm64
+            shell: bash
+            packageManager: default
+          - machine: ubuntu-24.04-arm
+            architecture: arm64
+            shell: bash
+            packageManager: default
+          - machine: windows-latest
+            architecture: x86_64
+            shell: msys2
+            packageManager: default
       fail-fast: false
     defaults:
      run:
-      shell: ${{ matrix.os[2] }} {0}
+      shell: ${{ matrix.target.shell }} {0}
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Install Ubuntu packages
-      if: matrix.os[0] == 'ubuntu-latest'
+      if: startsWith(matrix.target.machine, 'ubuntu')
       run: |
         sudo apt-get update
         sudo apt-get -y install texinfo bison flex gettext libgmp3-dev libmpfr-dev libmpc-dev
 
-    - name: Install macOS packages
-      if: startsWith(matrix.os[0], 'macos')
+    - name: Install macOS packages with brew
+      if: startsWith(matrix.target.machine, 'macos') && matrix.target.packageManager == 'brew'
       run: |
         brew update
         brew install texinfo bison flex gnu-sed gsl gmp mpfr libmpc
 
+    - name: Install macOS packages with macport
+      if: startsWith(matrix.target.machine, 'macos') && matrix.target.packageManager == 'macport'
+      run: |
+        curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+        source ./macports-ci install --remove-brew --version=2.11.5 --sync=rsync
+         sudo port install gmp mpfr libmpc libiconv bison flex texinfo
+
     - name: Install MSYS2 packages
-      if: matrix.os[0] == 'windows-latest'
+      if: startsWith(matrix.target.machine, 'windows')
       uses: msys2/setup-msys2@v2
       with:
         msystem: MINGW32
         install: |
           base-devel git make texinfo flex bison patch binutils mpc-devel tar
-          mingw-w64-i686-readline mingw-w64-i686-gcc mingw-w64-i686-cmake 
-          mingw-w64-i686-make mingw-w64-i686-libogg
+          mingw-w64-i686-readline mingw-w64-i686-gcc 
+          mingw-w64-i686-cmake mingw-w64-i686-make mingw-w64-i686-libogg
         update: true
 
     - name: Runs all the stages in the shell
@@ -63,16 +93,17 @@ jobs:
         mipsel-none-elf-as --version
         mipsel-none-elf-ld --version
         mipsel-none-elf-gcc --version
-    
+
     - name: Get short SHA
       id: slug
-      run: printf '%s\n' "sha8=$(printf '%s\n' ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_OUTPUT
-    
-    - name: Compress ps2dev folder
       run: |
-        tar -zcvf ps2dev.tar.gz ps2dev
-    
+        echo "sha8=${MSYSTEM}-sha[$(echo ${GITHUB_SHA} | cut -c1-8)]" >> $GITHUB_OUTPUT
+
+    - name: Prepare ps2dev folder
+      run: |
+        tar -zcvf ps2dev-${{matrix.target.machine}}.tar.gz ps2dev
+
     - uses: actions/upload-artifact@v4
       with:
-        name: ps2dev-${{ steps.slug.outputs.sha8 }}-${{ matrix.os[0] }}
-        path: ps2dev.tar.gz
+        name: ps2dev-${{matrix.target.machine}}-ps2dev-${{matrix.target.architecture}}-${{matrix.target.packageManager}}-${{ steps.slug.outputs.sha8 }}
+        path: ps2dev-${{matrix.target.machine}}.tar.gz
