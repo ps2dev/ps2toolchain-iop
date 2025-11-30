@@ -21,7 +21,7 @@ This program will automatically build and install an IOP compiler, which is used
 
 ## What these scripts do
 
-These scripts download (with `git clone`) and install [binutils 2.45](http://www.gnu.org/software/binutils/ "binutils") (iop), [gcc 15.2.0](https://gcc.gnu.org/ "gcc") (iop).
+These scripts download (with `git clone`) and install [binutils 2.45.1](http://www.gnu.org/software/binutils/ "binutils") (iop), [gcc 15.2.0](https://gcc.gnu.org/ "gcc") (iop).
 
 ## Requirements
 
