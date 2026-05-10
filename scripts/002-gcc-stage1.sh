@@ -61,8 +61,12 @@ mkdir "build-$TARGET-stage1"
 cd "build-$TARGET-stage1"
 
 ## Configure the build.
+## -fno-char8_t keeps u8"..." literals as `const char[]` so libcody builds
+## under host compilers that default to C++20 or later (e.g. GCC 16).
 CFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
 CXXFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
+CXXFLAGS="-g -O2 -fno-char8_t" \
+CXXFLAGS_FOR_BUILD="-g -O2 -fno-char8_t" \
 ../configure \
   --quiet \
   --prefix="$PS2DEV/$TARGET_ALIAS" \
