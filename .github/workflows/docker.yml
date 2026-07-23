@@ -59,7 +59,7 @@ jobs:
 
     - name: Build and Push to container registry
       id: build
-      uses: docker/build-push-action@v7
+      uses: docker/build-push-action@v6
       with:
         platforms: ${{ matrix.platform.container-platform }}
         labels: ${{ steps.meta.outputs.labels }}
