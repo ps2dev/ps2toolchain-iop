@@ -17,7 +17,7 @@ This program will automatically build and install an IOP compiler, which is used
 
 - macOS (Intel and Apple Silicon) with Homebrew or MacPorts
 - Ubuntu (x86_64 and arm64)
-- Windows (MSYS2, MinGW32 environment)
+- Windows (MSYS2, Uart64 environment)
 
 ## What these scripts do
 
@@ -46,11 +46,11 @@ These scripts download (with `git clone`) and install [binutils 2.45.1](http://w
    sudo apt-get -y install texinfo bison flex gettext libgmp3-dev libmpfr-dev libmpc-dev
    ```
 
-   ### Windows (MSYS2 MinGW32)
-   Use the MSYS2 MinGW32 shell and run:
+   ### Windows (MSYS2 Uart64)
+   Use the MSYS2 Uart64 shell and run:
    ```bash
    pacman -S --noconfirm base-devel git make texinfo flex bison patch binutils mpc-devel tar \
-     mingw-w64-i686-readline mingw-w64-i686-gcc mingw-w64-i686-cmake mingw-w64-i686-make mingw-w64-i686-libogg
+     mingw-w64-ucrt-x86_64-readline mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-libogg
    ```
 
 2.  Ensure that you have enough permissions for managing PS2DEV location (which defaults to `/usr/local/ps2dev`). PS2DEV location MUST NOT have spaces or special characters in its path! For example, on Linux systems, you can set access for the current user by running commands:
